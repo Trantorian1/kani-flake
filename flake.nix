@@ -160,7 +160,7 @@
     };
 
     devShells.${system}.default = pkgs.mkShell {
-      buildInput = [
+      buildInputs = [
         self.packages.${system}.kani
         self.packages.${system}.rust
       ];
