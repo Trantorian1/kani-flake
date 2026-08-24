@@ -29,11 +29,11 @@
       rust-toolchain = "${kani-src}/rust-toolchain.toml";
       rustPkgs = pkgs.extend rust-overlay.overlays.default;
     in rec {
-      rust = rustPkgs.rust-bin.fromRustupToolchainFile rust-toolchain;
+      rust-bin = rustPkgs.rust-bin.fromRustupToolchainFile rust-toolchain;
 
       rustPlatform = rustPkgs.makeRustPlatform {
-        cargo = rust;
-        rustc = rust;
+        cargo = rust-bin;
+        rustc = rust-bin;
       };
 
       kani = let
@@ -52,7 +52,7 @@
         toolchainChannel = (lib.importTOML rust-toolchain).toolchain.channel;
         stdVendor = rustPlatform.fetchCargoVendor {
           name = "rust-src-${toolchainChannel}";
-          src = "${rust}/lib/rustlib/src/rust/library";
+          src = "${rust-bin}/lib/rustlib/src/rust/library";
           hash = "sha256-5oJ/mtsJW0R3F7jgxafP23+WMLkyMKu10De5WIzb7Ro=";
         };
 
@@ -83,7 +83,7 @@
           # collapses that path back onto the toolchain's own store path, which is how
           # we get away without rustup inside the sandbox.
           env = {
-            RUSTUP_HOME = "${rust}";
+            RUSTUP_HOME = "${rust-bin}";
             RUSTUP_TOOLCHAIN = "..";
             CARGO_NET_OFFLINE = "true";
           };
@@ -128,7 +128,7 @@
 
             # `kani-driver` runs `cargo` out of this symlink rather than going through
             # rustup, and reads the channel back from `rust-toolchain-version`.
-            ln -s "${rust}" "$home/toolchain"
+            ln -s "${rust-bin}" "$home/toolchain"
             printf '%s' "${toolchainChannel}-${pkgs.stdenv.hostPlatform.config}" > "$home/rust-toolchain-version"
 
             install -Dm755 target/kani/bin/kani "$out/bin/kani"
@@ -156,13 +156,13 @@
     };
 
     overlays.default = final: prev: {
-      inherit (self.packages.${prev.stdenv.hostPlatform.system}) kani rust rustPlatform;
+      inherit (self.packages.${prev.stdenv.hostPlatform.system}) kani rust-bin rustPlatform;
     };
 
     devShells.${system}.default = pkgs.mkShell {
       buildInputs = [
         self.packages.${system}.kani
-        self.packages.${system}.rust
+        self.packages.${system}.rust-bin
       ];
     };
   };
