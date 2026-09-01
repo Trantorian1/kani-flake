@@ -7,7 +7,7 @@
     rust-overlay.url = "github:oxalica/rust-overlay";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
 
-    kani-src.url = "git+https://github.com/model-checking/kani?ref=main&rev=e790e830dd9e4ba55a17ce72fd4cea7e4d142e3c&submodules=1";
+    kani-src.url = "git+https://github.com/model-checking/kani?ref=main&rev=b07abe8a72f8eb1ef1ea3521ca6b00a973d341bc&submodules=1";
     kani-src.flake = false;
   };
 
@@ -44,7 +44,7 @@
         kaniVendor = rustPlatform.fetchCargoVendor {
           name = "kani-${version}";
           src = kani-src;
-          hash = "sha256-LIkxAHdEZehKtaZqMK+s7y3PfMz85c6oxa5MHzo8Fek=";
+          hash = "sha256-2R6pWBzrvtH4yqXKAS7MlH0lmbZxXXgHVFaSKiev3/M=";
         };
 
         # `-Z build-std` recompiles the standard library, whose dependencies live in `rust-src`'s
@@ -53,7 +53,7 @@
         stdVendor = rustPlatform.fetchCargoVendor {
           name = "rust-src-${toolchainChannel}";
           src = "${rust-bin}/lib/rustlib/src/rust/library";
-          hash = "sha256-5oJ/mtsJW0R3F7jgxafP23+WMLkyMKu10De5WIzb7Ro=";
+          hash = "sha256-nIqmPI2YOFbZSIfxMTOzU9tgVbAuDXmigCHjBn21BiA=";
         };
 
         # Cargo can only replace `crates-io` with one directory source, so the two vendor trees have

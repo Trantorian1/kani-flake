@@ -3,18 +3,18 @@
     "kani-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1787268572,
-        "narHash": "sha256-xSxO0QCSll86fODYPrDyukevLpYeGT7JDQnQG78LK2I=",
+        "lastModified": 1788232620,
+        "narHash": "sha256-UtxJDeA1aOHJrH2PzfOSUT/zyzOxfvj8y5hT53VlsvY=",
         "ref": "main",
-        "rev": "e790e830dd9e4ba55a17ce72fd4cea7e4d142e3c",
-        "revCount": 2524,
+        "rev": "b07abe8a72f8eb1ef1ea3521ca6b00a973d341bc",
+        "revCount": 2561,
         "submodules": true,
         "type": "git",
         "url": "https://github.com/model-checking/kani"
       },
       "original": {
         "ref": "main",
-        "rev": "e790e830dd9e4ba55a17ce72fd4cea7e4d142e3c",
+        "rev": "b07abe8a72f8eb1ef1ea3521ca6b00a973d341bc",
         "submodules": true,
         "type": "git",
         "url": "https://github.com/model-checking/kani"
