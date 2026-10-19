@@ -2,7 +2,8 @@
   description = "Pure and reproducible overlay for the Kani rust verifier";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs?ref=nixos-unstable";
+    nixlib.url = "github:nix-util/nixlib";
 
     rust-overlay.url = "github:oxalica/rust-overlay";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
@@ -13,28 +14,34 @@
 
   outputs = {
     self,
-    nixpkgs,
-    rust-overlay,
-    kani-src,
+    nixlib,
     ...
-  }: let
-    system = "x86_64-linux";
-    pkgs = import nixpkgs {inherit system;};
-    lib = pkgs.lib;
+  } @ inputs: let
+    systems = ["x86_64-linux"];
+    util = nixlib.util {inherit inputs systems;};
   in {
-    packages.${system} = let
+    packages = util.forEachSystem ({
+      kani-src,
+      rust-overlay,
+      pkgs,
+      lib,
+      libpkgs,
+      ...
+    }: let
       # Kani pins its nightly in `rust-toolchain.toml` and links against that exact `rustc_driver`;
       # taking the toolchain from the file means it follows the source across bumps instead of
       # having to be tracked by hand.
       rust-toolchain = "${kani-src}/rust-toolchain.toml";
       rustPkgs = pkgs.extend rust-overlay.overlays.default;
-    in rec {
+
       rust-bin = rustPkgs.rust-bin.fromRustupToolchainFile rust-toolchain;
 
       rustPlatform = rustPkgs.makeRustPlatform {
         cargo = rust-bin;
         rustc = rust-bin;
       };
+    in rec {
+      inherit rust-bin;
 
       kani = let
         kaniVersion = (lib.importTOML "${kani-src}/Cargo.toml").package.version;
@@ -153,17 +160,27 @@
             platforms = ["x86_64-linux"];
           };
         };
-    };
+
+      devenv = libpkgs.mkEnv {
+        packages = [
+          kani
+          rust-bin
+        ];
+      };
+    });
 
     overlays.default = final: prev: {
-      inherit (self.packages.${prev.stdenv.hostPlatform.system}) kani rust-bin rustPlatform;
+      inherit (self.packages.${prev.stdenv.hostPlatform.system}) kani rust-bin;
     };
 
-    devShells.${system}.default = pkgs.mkShell {
-      buildInputs = [
-        self.packages.${system}.kani
-        self.packages.${system}.rust-bin
-      ];
-    };
+    devShells = util.forEachSystem ({
+      self,
+      pkgs,
+      ...
+    }: {
+      default = pkgs.mkShell {
+        packages = [self.packages.devenv];
+      };
+    });
   };
 }

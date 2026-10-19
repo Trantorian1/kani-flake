@@ -20,17 +20,32 @@
         "url": "https://github.com/model-checking/kani"
       }
     },
-    "nixpkgs": {
+    "nixlib": {
       "locked": {
-        "lastModified": 1788179007,
-        "narHash": "sha256-hn1oU2rue2SYK8dAr8+WNZWtbsz1S2W5mnHlSEuh3bo=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "34ab99075ac4f7e40cf037eef32cb1c360bb85e9",
+        "lastModified": 1791554268,
+        "narHash": "sha256-1+DSf0JyJoepF6eTjHvfewJJD3jFVKJHEWpo1dmSt6c=",
+        "owner": "nix-util",
+        "repo": "nixlib",
+        "rev": "2be9a19f69cf741899becc55072d10c49fb42773",
         "type": "github"
       },
       "original": {
-        "owner": "nixos",
+        "owner": "nix-util",
+        "repo": "nixlib",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1792094642,
+        "narHash": "sha256-zp8ToDMnqZcu4o4IH9pdwXFXGp7yLm/M0dEnNWnyd7I=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "fe13242281a67641c0102cdb1087f0ebe586c7df",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
         "ref": "nixos-unstable",
         "repo": "nixpkgs",
         "type": "github"
@@ -39,6 +54,7 @@
     "root": {
       "inputs": {
         "kani-src": "kani-src",
+        "nixlib": "nixlib",
         "nixpkgs": "nixpkgs",
         "rust-overlay": "rust-overlay"
       }
