@@ -10,6 +10,8 @@
 
     kani-src.url = "git+https://github.com/model-checking/kani?ref=main&rev=b07abe8a72f8eb1ef1ea3521ca6b00a973d341bc&submodules=1";
     kani-src.flake = false;
+
+    opencode-sandbox.url = "github:OpencodeSandbox/opencode-sandbox";
   };
 
   outputs = {
@@ -23,6 +25,7 @@
     packages = util.forEachSystem ({
       kani-src,
       rust-overlay,
+      opencode-sandbox,
       pkgs,
       lib,
       libpkgs,
@@ -160,6 +163,17 @@
             platforms = ["x86_64-linux"];
           };
         };
+
+      sandbox = opencode-sandbox.packages.sandbox.override {
+        opencode-sandbox = {
+          git.remote.url = "https://github.com/Trantorian1/kani-flake.git";
+          git.shutdown.pushOnExit = false;
+          git.withLocalChanges = true;
+
+          forwardPorts = [8888];
+          env.extend = [devenv];
+        };
+      };
 
       devenv = libpkgs.mkEnv {
         packages = [
